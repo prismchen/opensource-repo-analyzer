@@ -1,3 +1,10 @@
+package main;
+
+import org.junit.Test;
+
+import java.io.File;
+import java.util.Collection;
+
 /**
  * Created by xiaochen on 10/10/16.
  */
@@ -27,5 +34,20 @@ public class StringUtils {
             return i;
         }
         return str.length();
+    }
+
+    /**
+     * Created by xiaochen on 10/11/16.
+     */
+    public static class AnalyzerTest {
+        @Test
+        public void ctorTest() throws Exception {
+            Analyzer a = new Analyzer("data");
+            Collection<File> files = a.getFilePool();
+            assert(files.size() > 0);
+        }
+
+
+
     }
 }

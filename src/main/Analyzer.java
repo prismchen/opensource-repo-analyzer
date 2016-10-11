@@ -1,3 +1,5 @@
+package main;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
