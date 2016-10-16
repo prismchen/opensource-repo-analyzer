@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3fbe2320-a4d8-4e2a-9fbc-8091558d3d82" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test/AnalyzerTest.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Analyzer.java" afterPath="$PROJECT_DIR$/src/main/Analyzer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/StringUtils.java" afterPath="$PROJECT_DIR$/src/main/StringUtils.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data" afterPath="$PROJECT_DIR$/data" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/opensource-repo-analyzer.iml" afterPath="$PROJECT_DIR$/opensource-repo-analyzer.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/Analyzer.java" afterPath="$PROJECT_DIR$/src/main/Analyzer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/main/AnalyzerTest.java" afterPath="$PROJECT_DIR$/src/test/main/AnalyzerTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/main/StringUtilsTest.java" afterPath="$PROJECT_DIR$/src/test/main/StringUtilsTest.java" />
     </list>
     <ignored path="opensource-repo-analyzer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,45 +26,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Analyzer.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Analyzer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/Analyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+            <state relative-caret-position="153">
+              <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1347#1348#0" expanded="true" />
+                <element signature="e#1379#1380#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AnalyzerTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AnalyzerTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/main/AnalyzerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StringUtils.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/StringUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StringUtilsTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/main/StringUtilsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+            <state relative-caret-position="165">
+              <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -96,7 +73,6 @@
       <list>
         <option value="$PROJECT_DIR$/src/StringUitls.java" />
         <option value="$PROJECT_DIR$/src/Analyzer.java" />
-        <option value="$PROJECT_DIR$/src/main/Analyzer.java" />
         <option value="$PROJECT_DIR$/src/test/main/AnalyzerTest.groovy" />
         <option value="$PROJECT_DIR$/src/StringUtils.java" />
         <option value="$PROJECT_DIR$/src/main/StringUtils.java" />
@@ -104,6 +80,7 @@
         <option value="$PROJECT_DIR$/src/test/StringUtilsTest.java" />
         <option value="$PROJECT_DIR$/src/test/main/StringUtilsTest.java" />
         <option value="$PROJECT_DIR$/src/test/main/AnalyzerTest.java" />
+        <option value="$PROJECT_DIR$/src/main/Analyzer.java" />
       </list>
     </option>
   </component>
@@ -236,7 +213,7 @@
       <recent name="$PROJECT_DIR$/test" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AnalyzerTest">
+  <component name="RunManager" selected="JUnit.AnalyzerTest.analyzeTest">
     <configuration default="false" name="AnalyzerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -244,27 +221,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="opensource-repo-analyzer" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="main" />
-      <option name="MAIN_CLASS_NAME" value="main.AnalyzerTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="false" name="AnalyzerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="opensource-repo-analyzer" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -310,32 +266,6 @@
       <patterns />
       <method />
     </configuration>
-    <configuration default="false" name="StringUtilsTest.countMatches" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="main.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="opensource-repo-analyzer" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="main" />
-      <option name="MAIN_CLASS_NAME" value="main.StringUtilsTest" />
-      <option name="METHOD_NAME" value="countMatches" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
     <configuration default="false" name="Analyzer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -354,6 +284,58 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="opensource-repo-analyzer" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="StringUtilsTest.indexOfAnyBut" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="main.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="opensource-repo-analyzer" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="main" />
+      <option name="MAIN_CLASS_NAME" value="main.StringUtilsTest" />
+      <option name="METHOD_NAME" value="indexOfAnyBut" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="false" name="AnalyzerTest.analyzeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="main.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="opensource-repo-analyzer" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="main" />
+      <option name="MAIN_CLASS_NAME" value="main.AnalyzerTest" />
+      <option name="METHOD_NAME" value="analyzeTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -608,23 +590,26 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="JUnit.AnalyzerTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.AnalyzerTest" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.StringUtilsTest" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.StringUtilsTest.countMatches" />
-      <item index="4" class="java.lang.String" itemvalue="Application.Analyzer" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.StringUtilsTest" />
+      <item index="2" class="java.lang.String" itemvalue="Application.Analyzer" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.StringUtilsTest.indexOfAnyBut" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.AnalyzerTest.analyzeTest" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="JUnit.AnalyzerTest" />
-        <item index="1" class="java.lang.String" itemvalue="Application.Analyzer" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.StringUtilsTest.countMatches" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.StringUtilsTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.AnalyzerTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.AnalyzerTest.analyzeTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.StringUtilsTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.StringUtilsTest.indexOfAnyBut" />
+        <item index="4" class="java.lang.String" itemvalue="Application.Analyzer" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -637,28 +622,40 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="AnalyzerTest - 2016.10.11 at 13h 11m 28s.xml">
+    <history-entry file="AnalyzerTest - 2016.10.11 at 13h 36m 08s.xml">
       <configuration name="AnalyzerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="AnalyzerTest - 2016.10.11 at 13h 14m 29s.xml">
+    <history-entry file="AnalyzerTest - 2016.10.11 at 13h 43m 21s.xml">
       <configuration name="AnalyzerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="AnalyzerTest_(1) - 2016.10.11 at 12h 53m 22s.xml">
-      <configuration name="AnalyzerTest (1)" configurationId="JUnit" />
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 34m 11s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="AnalyzerTest_(1) - 2016.10.11 at 13h 02m 47s.xml">
-      <configuration name="AnalyzerTest (1)" configurationId="JUnit" />
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 35m 19s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="StringUtilsTest - 2016.10.11 at 13h 10m 54s.xml">
-      <configuration name="StringUtilsTest" configurationId="JUnit" />
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 35m 42s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="StringUtilsTest_countMatches - 2016.10.11 at 13h 13m 24s.xml">
-      <configuration name="StringUtilsTest.countMatches" configurationId="JUnit" />
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 41m 33s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 41m 42s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 42m 48s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 42m 50s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AnalyzerTest_analyzeTest - 2016.10.11 at 13h 43m 09s.xml">
+      <configuration name="AnalyzerTest.analyzeTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="800" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -667,7 +664,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32909605" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32909605" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -676,7 +673,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997175" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -712,6 +709,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1347#1348#0" expanded="true" />
+            <element signature="e#1379#1380#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -763,29 +762,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/Analyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/main/StringUtilsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+        <state relative-caret-position="285">
+          <caret line="21" column="66" selection-start-line="21" selection-start-column="66" selection-end-line="21" selection-end-column="66" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/main/AnalyzerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+        <state relative-caret-position="165">
+          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/Analyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1347#1348#0" expanded="true" />
+            <element signature="e#1379#1380#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

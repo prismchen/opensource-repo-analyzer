@@ -19,7 +19,7 @@ import java.util.Map;
 public class Analyzer {
     public static final String[] EXTENTIONS = new String[]{"java"};
     private final Map<Integer, Integer> mWhiteSpace = new HashMap<>();
-    private final Charset mCharset = Charset.forName("US-ASCII");
+    private final Charset mCharset = Charset.forName("UTF-8");
     private Collection<File> mFilePool;
 
     public Analyzer(String repo) {
@@ -35,9 +35,6 @@ public class Analyzer {
                 count = StringUtils.countMatches(line, ' ');
                 mWhiteSpace.put(count, mWhiteSpace.getOrDefault(count, 0) + 1);
             }
-            for (int spaceNum : mWhiteSpace.keySet()) {
-                System.out.println(spaceNum + " : " + mWhiteSpace.get(spaceNum));
-            }
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }
@@ -45,6 +42,18 @@ public class Analyzer {
 
     public Collection<File> getFilePool() {
         return mFilePool;
+    }
+
+    public void analyzePool() {
+        for (File f : getFilePool()) {
+            analyze(f.toPath());
+        }
+    }
+
+    public void printStats() {
+        for (int spaceNum : mWhiteSpace.keySet()) {
+            System.out.println(spaceNum + " : " + mWhiteSpace.get(spaceNum));
+        }
     }
 
     public static void main(String[] args) {

@@ -16,7 +16,10 @@ public class StringUtilsTest {
 
     @Test
     public void indexOfAnyBut() throws Exception {
-
+        String testStr0 = "    abc";
+        String testStr1 = "    a b c ";
+        assertEquals(4, StringUtils.indexOfAnyBut(testStr0, ' '));
+        assertEquals(4, StringUtils.indexOfAnyBut(testStr1, ' '));
     }
 
 }
