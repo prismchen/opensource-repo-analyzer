@@ -26,11 +26,18 @@ public class Analyzer {
         mFilePool = FileUtils.listFiles(new File(repo), EXTENTIONS, true);
     }
 
+    /**
+     * Ctor
+     * @param file
+     */
     public void analyze(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file, mCharset)) {
             String line = null;
             int count = 0;
             while ((line = reader.readLine()) != null) {
+                if (StringUtils.isComment(line)) {
+                    continue;
+                }
                 line = line.substring(0, StringUtils.indexOfAnyBut(line, ' '));
                 count = StringUtils.countMatches(line, ' ');
                 mWhiteSpace.put(count, mWhiteSpace.getOrDefault(count, 0) + 1);
@@ -51,6 +58,7 @@ public class Analyzer {
     }
 
     public void printStats() {
+        System.out.println("Number of Spaces : Occurrence");
         for (int spaceNum : mWhiteSpace.keySet()) {
             System.out.println(spaceNum + " : " + mWhiteSpace.get(spaceNum));
         }

@@ -24,4 +24,28 @@ public class AnalyzerTest {
         a.analyzePool();
         a.printStats();
     }
+
+    @Test
+    public void firstNonSpaceElemTest() {
+        String str1 = " daf daf daf";
+        String str2 = null;
+        String str3 = "     ";
+        assertEquals("daf", StringUtils.firstNonSpaceElem(str1));
+        assertEquals("", StringUtils.firstNonSpaceElem(str2));
+        assertEquals("", StringUtils.firstNonSpaceElem(str3));
+    }
+
+    @Test
+    public void isCommentTest() {
+        String str1 = "//aklglkjalg";
+        String str2 = "/** aklglkjalg";
+        String str3 = "* aklglkjalg";
+        String str4 = "*/";
+        String str5 = "System";
+        assertTrue(StringUtils.isComment(str1));
+        assertTrue(StringUtils.isComment(str2));
+        assertTrue(StringUtils.isComment(str3));
+        assertTrue(StringUtils.isComment(str4));
+        assertTrue(!StringUtils.isComment(str5));
+    }
 }
