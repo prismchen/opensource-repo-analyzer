@@ -11,16 +11,19 @@ import static org.junit.Assert.*;
  * Created by xiaochen on 10/11/16.
  */
 public class AnalyzerTest {
+
+    private static final String FOLDER_NAME = "Nondex/";
+
     @Test
     public void ctorTest() throws Exception {
-        Analyzer a = new Analyzer("data");
+        Analyzer a = new Analyzer(FOLDER_NAME);
         Collection<File> files = a.getFilePool();
         assertTrue(files.size() > 0);
     }
 
     @Test
     public void analyzeTest() throws Exception {
-        Analyzer a = new Analyzer("data");
+        Analyzer a = new Analyzer(FOLDER_NAME);
         a.analyzePool();
         a.printStats();
     }

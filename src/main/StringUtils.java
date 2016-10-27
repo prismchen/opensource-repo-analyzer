@@ -1,20 +1,15 @@
 package main;
 
-import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by xiaochen on 10/10/16.
  */
 public class StringUtils {
 
-    public static final String[] COMMENTSIGNS = new String[]{"/**", "*", "*/", "//" };
-
+    public static final String[] COMMENT_SIGNS = new String[]{"/**", "*", "*/", "//" };
 
     static int countMatches(String str, char c) {
         if (str == null) {
@@ -44,7 +39,7 @@ public class StringUtils {
 
     static boolean isComment(String line) {
         String firstElem = firstNonSpaceElem(line);
-        for (String commentSign : COMMENTSIGNS) {
+        for (String commentSign : COMMENT_SIGNS) {
             if (firstElem.startsWith(commentSign)) {
                 return true;
             }
@@ -63,20 +58,5 @@ public class StringUtils {
             end++;
         }
         return line.substring(start, end);
-    }
-
-    /**
-     * Created by xiaochen on 10/11/16.
-     */
-    public static class AnalyzerTest {
-        @Test
-        public void ctorTest() throws Exception {
-            Analyzer a = new Analyzer("data");
-            Collection<File> files = a.getFilePool();
-            assert(files.size() > 0);
-        }
-
-
-
     }
 }

@@ -22,8 +22,8 @@ public class Analyzer {
     private final Charset mCharset = Charset.forName("UTF-8");
     private Collection<File> mFilePool;
 
-    public Analyzer(String repo) {
-        mFilePool = FileUtils.listFiles(new File(repo), EXTENTIONS, true);
+    public Analyzer(String repoPath) {
+        mFilePool = FileUtils.listFiles(new File(repoPath), EXTENTIONS, true);
     }
 
     /**
@@ -64,6 +64,4 @@ public class Analyzer {
         }
     }
 
-    public static void main(String[] args) {
-    }
 }
