@@ -18,12 +18,14 @@ import java.util.Map;
  */
 public class Analyzer {
     public static final String[] EXTENTIONS = new String[]{"java"};
+    private String mRopePath;
     private final Map<Integer, Integer> mWhiteSpace = new HashMap<>();
     private final Charset mCharset = Charset.forName("UTF-8");
     private Collection<File> mFilePool;
 
     public Analyzer(String repoPath) {
-        mFilePool = FileUtils.listFiles(new File(repoPath), EXTENTIONS, true);
+        mRopePath = repoPath;
+        mFilePool = FileUtils.listFiles(new File(mRopePath), EXTENTIONS, true);
     }
 
     /**
@@ -47,6 +49,15 @@ public class Analyzer {
         }
     }
 
+    public void genConcatFile() throws IOException {
+        File output = new File(mRopePath + "Concat.java");
+        FileUtils.writeByteArrayToFile(output, new byte[0]);
+        for (File f : mFilePool) {
+            FileUtils.writeByteArrayToFile(output, FileUtils.readFileToByteArray(f), true);
+        }
+    }
+
+
     public Collection<File> getFilePool() {
         return mFilePool;
     }
@@ -58,10 +69,44 @@ public class Analyzer {
     }
 
     public void printStats() {
+
+        int totalNum = 0;
+        int leastMajority = Integer.MAX_VALUE;
+        int violates = 0;
+
         System.out.println("Number of Spaces : Occurrence");
         for (int spaceNum : mWhiteSpace.keySet()) {
+            if (spaceNum != 0) {
+                totalNum += mWhiteSpace.get(spaceNum);
+            }
             System.out.println(spaceNum + " : " + mWhiteSpace.get(spaceNum));
         }
+
+        for (int spaceNum : mWhiteSpace.keySet()) {
+            if (spaceNum != 0 && mWhiteSpace.get(spaceNum) > totalNum / 20) {
+                leastMajority = Math.min(leastMajority, spaceNum);
+            }
+        }
+
+        System.out.println("Potential indent style: " + leastMajority);
+
+        for (int spaceNum : mWhiteSpace.keySet()) {
+            if (spaceNum % leastMajority != 0) {
+                violates += mWhiteSpace.get(spaceNum);
+            }
+        }
+
+        System.out.println("Number of violation : " + violates + "/" + totalNum);
     }
 
+    public static void main(String[] args) {
+        Analyzer a = new Analyzer(args[0]);
+        try {
+            a.genConcatFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        a.analyzePool();
+        a.printStats();
+    }
 }

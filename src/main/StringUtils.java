@@ -24,12 +24,19 @@ public class StringUtils {
         return count;
     }
 
-    static int indexOfAnyBut(String line, char c) {
-        if (line == null) {
+    /*
+    this will be ignored
+     foo*/
+    static int indexOfAnyBut(String line, char c)
+    {
+        if (line == null)
+        {
             return -1;
         }
-        for (int i = 0; i < line.length(); i++) {
-            if (line.charAt(i) == c) {
+        for (int i = 0; i < line.length(); i++)
+        {
+            if (line.charAt(i) == c)
+            {
                 continue;
             }
             return i;
