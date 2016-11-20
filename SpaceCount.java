@@ -1,116 +1,179 @@
-import java.io.IOException;
-import java.util.*;
-
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.conf.*;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import com.alexholmes.json.mapreduce.MultiLineJsonInputFormat;
 
-public class SpaceCount {
+import java.util.*;
+import java.io.IOException;
 
-    public static final String[] COMMENT_SIGNS = new String[]{"/**", "*", "*/", "//" };
+public class SpaceCount extends Configured implements Tool {
 
-    private static int indexOfAnyBut(String line, char c)
-    {
-        if (line == null)
-        {
-            return -1;
-        }
-        for (int i = 0; i < line.length(); i++)
-        {
-            if (line.charAt(i) == c)
-            {
-                continue;
+    private static final String JSON_FIELD = "content";
+
+    static public class SpaceCountMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+        final private static LongWritable ONE = new LongWritable(1);
+        private String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
+        private String unwantedSuffix = "\"}";
+        private Map<Integer, Integer> spaceStats;
+
+        private String clearScript(String script) {
+            int scriptStart = script.indexOf(unwantedPrefix);
+            if (scriptStart < 0) {
+                return null;
             }
-            return i;
-        }
-        return line.length();
-    }
-
-    private static int countMatches(String str, char c) {
-        if (str == null) {
-            return 0;
-        }
-        int count = 0;
-        for (char ch : str.toCharArray()) {
-            if (ch == c) {
-                count++;
+            else {
+                scriptStart += unwantedPrefix.length();
             }
-        }
-        return count;
-    }
-    
-    private static String firstNonSpaceElem(String line) {
-        int start = indexOfAnyBut(line, ' ');
-        if (start == -1 || start == line.length()) {
-            return "";
-        }
-        int end = start;
-
-        while (end < line.length() && line.charAt(end) != ' ') {
-            end++;
-        }
-        return line.substring(start, end);
-    }
-
-
-    private static boolean isComment(String line) {
-        String firstElem = firstNonSpaceElem(line);
-        for (String commentSign : COMMENT_SIGNS) {
-            if (firstElem.startsWith(commentSign)) {
-                return true;
+            int scriptEnd = script.lastIndexOf(unwantedSuffix);
+            if (scriptEnd != script.length() - unwantedSuffix.length()) {
+                return null;
             }
+            script = script.substring(scriptStart, scriptEnd);
+            return script;
         }
-        return false;
-    }
 
-    public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
-        private final static IntWritable one = new IntWritable(1);
-        private Text numSpaces = new Text();
-        private String line;
+        private List<String> splitByLine(String script) {
+            List<String> result = new ArrayList<>();
+            int index = script.indexOf("\\n");
+            while (index >= 0) {
+                result.add(script.substring(0, index));
+                script = script.substring(index + 2);
+                index = script.indexOf("\\n");
+            }
+            result.add(script);
+            return result;
+        }
 
-        public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-            line = value.toString();
-            if (!isComment(line)) {
-                line = line.substring(0, indexOfAnyBut(line, ' '));
-                int count = countMatches(line, ' ');
-                if (count > 0) {
-                    numSpaces.set(String.valueOf(count));
-                    output.collect(numSpaces, one);
+        private int indexOfAnyBut(String line, char c) {
+            if (line == null) {
+                return -1;
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.charAt(i) == c) {
+                    continue;
+                }
+                return i;
+            }
+            return line.length();
+        }
+
+        private int countMatches(String str, char c) {
+            if (str == null) {
+                return 0;
+            }
+            int count = 0;
+            for (char ch : str.toCharArray()) {
+                if (ch == c) {
+                    count++;
                 }
             }
+            return count;
+        }
+
+        @Override
+        protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
+            String script = clearScript(text.toString());
+            
+            if (script != null) {
+
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
+
+                List<String> lines = splitByLine(script);
+                int count = 0;
+                spaceStats = new HashMap<>();
+
+                for (String line : lines) {
+                    if (line.startsWith("\\t")) {
+                        context.write(new Text("-1"), ONE);
+                        return;
+                    }
+
+                    line = line.substring(0, indexOfAnyBut(line, ' '));
+                    count = countMatches(line, ' ');
+
+                    if (!spaceStats.containsKey(count)) {
+                        spaceStats.put(count, 1);
+                    }
+                    else {
+                        spaceStats.put(count, spaceStats.get(count) + 1);
+                    }
+                }
+
+                int totalNum = 0;
+                int leastMajority = Integer.MAX_VALUE;
+
+                for (int spaceNum : spaceStats.keySet()) {
+                    if (spaceNum != 0) {
+                        totalNum += spaceStats.get(spaceNum);
+                    }
+                }
+
+                for (int spaceNum : spaceStats.keySet()) {
+                    if (spaceNum != 0 && spaceStats.get(spaceNum) > totalNum / 20) {
+                        leastMajority = Math.min(leastMajority, spaceNum);
+                    }
+                }
+
+                context.write(new Text("" + leastMajority), ONE);
+            }     
         }
     }
 
-    public static class Reduce extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
-        public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-            int sum = 0;
-            while (values.hasNext()) {
-                sum += values.next().get();
+    static public class SpaceCountReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+        private LongWritable total = new LongWritable();
+
+        @Override
+        protected void reduce(Text token, Iterable<LongWritable> counts, Context context) throws IOException, InterruptedException {
+            long n = 0;
+            for (LongWritable count : counts) {
+                n += count.get();
             }
-            output.collect(key, new IntWritable(sum));
+
+            total.set(n);
+            context.write(token, total);
         }
+    }
+
+    public int run(String[] args) throws Exception {
+
+        String input = args[0];
+        Path outputPath = new Path(args[1]);
+
+        Configuration configuration = getConf();
+
+        Job job = Job.getInstance(configuration, "SpaceCount");
+        job.setJarByClass(SpaceCount.class);
+
+        job.setMapperClass(SpaceCountMapper.class);
+        job.setCombinerClass(SpaceCountReducer.class);
+        job.setReducerClass(SpaceCountReducer.class);
+
+        // use the JSON input format
+        job.setInputFormatClass(MultiLineJsonInputFormat.class);
+        MultiLineJsonInputFormat.setInputJsonMember(job, JSON_FIELD);
+        job.setOutputFormatClass(TextOutputFormat.class);
+
+        FileInputFormat.setInputPaths(job, input);
+        FileOutputFormat.setOutputPath(job, outputPath);
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(LongWritable.class);
+
+        return job.waitForCompletion(true) ? 0 : -1;
     }
 
     public static void main(String[] args) throws Exception {
-        JobConf conf = new JobConf(WordCount.class);
-        conf.setJobName("wordcount");
-
-        conf.setOutputKeyClass(Text.class);
-        conf.setOutputValueClass(IntWritable.class);
-
-        conf.setMapperClass(Map.class);
-        conf.setCombinerClass(Reduce.class);
-        conf.setReducerClass(Reduce.class);
-
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setOutputFormat(TextOutputFormat.class);
-
-        FileInputFormat.setInputPaths(conf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(conf, new Path(args[1]));
-
-        JobClient.runJob(conf);
+        System.exit(ToolRunner.run(new SpaceCount(), args));
     }
 }
-
