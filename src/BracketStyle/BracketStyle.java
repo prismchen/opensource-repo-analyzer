@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.hadoop.fs.Path;
@@ -17,90 +18,40 @@ import com.alexholmes.json.mapreduce.MultiLineJsonInputFormat;
 import java.util.*;
 import java.io.IOException;
 
-public class SpaceCount extends Configured implements Tool {
+public class BracketStyle extends Configured implements Tool {
 
     private static final String JSON_FIELD = "content";
+    private static String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
+    private static String unwantedSuffix = "\"}";
 
-    static public class SpaceCountMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+    static public class BracketStyleMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        private String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
-        private String unwantedSuffix = "\"}";
         private Map<Integer, Integer> spaceStats;
-
-        private String clearScript(String script) {
-            int scriptStart = script.indexOf(unwantedPrefix);
-            if (scriptStart < 0) {
-                return null;
-            }
-            else {
-                scriptStart += unwantedPrefix.length();
-            }
-            int scriptEnd = script.lastIndexOf(unwantedSuffix);
-            if (scriptEnd != script.length() - unwantedSuffix.length()) {
-                return null;
-            }
-            script = script.substring(scriptStart, scriptEnd);
-            return script;
-        }
-
-        private List<String> splitByLine(String script) {
-            List<String> result = new ArrayList<>();
-            int index = script.indexOf("\\n");
-            while (index >= 0) {
-                result.add(script.substring(0, index));
-                script = script.substring(index + 2);
-                index = script.indexOf("\\n");
-            }
-            result.add(script);
-            return result;
-        }
-
-        private int indexOfAnyBut(String line, char c) {
-            if (line == null) {
-                return -1;
-            }
-            for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i) == c) {
-                    continue;
-                }
-                return i;
-            }
-            return line.length();
-        }
-
-        private int countMatches(String str, char c) {
-            if (str == null) {
-                return 0;
-            }
-            int count = 0;
-            for (char ch : str.toCharArray()) {
-                if (ch == c) {
-                    count++;
-                }
-            }
-            return count;
-        }
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
-            String script = clearScript(text.toString());
+            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);
             
             if (script != null) {
 
                 script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
 
-                List<String> lines = splitByLine(script);
+                List<String> lines = StringUtils.splitByLine(script);
                 int count = 0;
                 spaceStats = new HashMap<>();
 
                 for (String line : lines) {
                     if (line.startsWith("\\t")) {
-                        context.write(new Text("-1"), ONE);
+                        context.write(new Text("tab"), ONE);
                         return;
                     }
 
-                    line = line.substring(0, indexOfAnyBut(line, ' '));
-                    count = countMatches(line, ' ');
+                    line = line.substring(0, StringUtils.indexOfAnyBut(line, ' '));
+                    count = StringUtils.countMatches(line, ' ');
+
+                    if (count == 0) {
+                        continue;
+                    }
 
                     if (!spaceStats.containsKey(count)) {
                         spaceStats.put(count, 1);
@@ -110,17 +61,20 @@ public class SpaceCount extends Configured implements Tool {
                     }
                 }
 
+                if (spaceStats.size() == 0) {
+                    context.write(new Text("no indent"), ONE);
+                    return;
+                }
+
                 int totalNum = 0;
                 int leastMajority = Integer.MAX_VALUE;
 
                 for (int spaceNum : spaceStats.keySet()) {
-                    if (spaceNum != 0) {
-                        totalNum += spaceStats.get(spaceNum);
-                    }
+                    totalNum += spaceStats.get(spaceNum);
                 }
 
                 for (int spaceNum : spaceStats.keySet()) {
-                    if (spaceNum != 0 && spaceStats.get(spaceNum) > totalNum / 20) {
+                    if (spaceStats.get(spaceNum) > totalNum / 50) {
                         leastMajority = Math.min(leastMajority, spaceNum);
                     }
                 }
@@ -130,7 +84,7 @@ public class SpaceCount extends Configured implements Tool {
         }
     }
 
-    static public class SpaceCountReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+    static public class BracketStyleReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
         private LongWritable total = new LongWritable();
 
         @Override
@@ -150,14 +104,12 @@ public class SpaceCount extends Configured implements Tool {
         String input = args[0];
         Path outputPath = new Path(args[1]);
 
-        Configuration configuration = getConf();
+        Job job = Job.getInstance(super.getConf(), "BracketStyle");
+        job.setJarByClass(BracketStyle.class);
 
-        Job job = Job.getInstance(configuration, "SpaceCount");
-        job.setJarByClass(SpaceCount.class);
-
-        job.setMapperClass(SpaceCountMapper.class);
-        job.setCombinerClass(SpaceCountReducer.class);
-        job.setReducerClass(SpaceCountReducer.class);
+        job.setMapperClass(BracketStyleMapper.class);
+        job.setCombinerClass(BracketStyleReducer.class);
+        job.setReducerClass(BracketStyleReducer.class);
 
         // use the JSON input format
         job.setInputFormatClass(MultiLineJsonInputFormat.class);
@@ -174,6 +126,7 @@ public class SpaceCount extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        System.exit(ToolRunner.run(new SpaceCount(), args));
+        Configuration conf = new Configuration();
+        System.exit(ToolRunner.run(conf, new BracketStyle(), args));
     }
 }
