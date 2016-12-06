@@ -26,7 +26,8 @@ public class BracketStyle extends Configured implements Tool {
 
     static public class BracketStyleMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        private Map<Integer, Integer> spaceStats;
+        private int inline;
+        private int nextline;
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
@@ -37,49 +38,35 @@ public class BracketStyle extends Configured implements Tool {
                 script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
 
                 List<String> lines = StringUtils.splitByLine(script);
-                int count = 0;
-                spaceStats = new HashMap<>();
+
+                inline = 0;
+                nextline = 0;
 
                 for (String line : lines) {
-                    if (line.startsWith("\\t")) {
-                        context.write(new Text("tab"), ONE);
-                        return;
-                    }
+		            line = line.replaceAll("\\\\t", "");
 
-                    line = line.substring(0, StringUtils.indexOfAnyBut(line, ' '));
-                    count = StringUtils.countMatches(line, ' ');
+		            int index = StringUtils.indexOf(line, '{');
 
-                    if (count == 0) {
-                        continue;
-                    }
-
-                    if (!spaceStats.containsKey(count)) {
-                        spaceStats.put(count, 1);
-                    }
-                    else {
-                        spaceStats.put(count, spaceStats.get(count) + 1);
-                    }
+		            if (index >= 0) {
+		                if (index == StringUtils.indexOfAnyBut(line, ' ')) {
+		                    nextline++;
+		                }
+		                else {
+		                    inline++;
+		                }
+		                inline += StringUtils.countMatches(line, '{') - 1;
+		            }
+		        }
+                
+                if (inline > nextline) {
+                	context.write(new Text("Inline"), ONE);
                 }
-
-                if (spaceStats.size() == 0) {
-                    context.write(new Text("no indent"), ONE);
-                    return;
+                else if (inline < nextline) {
+                	context.write(new Text("Next line"), ONE);
                 }
-
-                int totalNum = 0;
-                int leastMajority = Integer.MAX_VALUE;
-
-                for (int spaceNum : spaceStats.keySet()) {
-                    totalNum += spaceStats.get(spaceNum);
+                else {
+                	context.write(new Text("Unclear"), ONE);
                 }
-
-                for (int spaceNum : spaceStats.keySet()) {
-                    if (spaceStats.get(spaceNum) > totalNum / 50) {
-                        leastMajority = Math.min(leastMajority, spaceNum);
-                    }
-                }
-
-                context.write(new Text("" + leastMajority), ONE);
             }     
         }
     }

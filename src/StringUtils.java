@@ -43,6 +43,18 @@ public class StringUtils {
         }
         return line.length();
     }
+    
+    public static int indexOf(String line, char c) {
+        if (line == null) {
+            return -1;
+        }
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == c) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public static int countMatches(String str, char c) {
         if (str == null) {
