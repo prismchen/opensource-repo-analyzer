@@ -18,16 +18,17 @@ import com.alexholmes.json.mapreduce.MultiLineJsonInputFormat;
 import java.util.*;
 import java.io.IOException;
 
-public class BracketStyle extends Configured implements Tool {
+public class ApacheProject extends Configured implements Tool {
 
     private static final String JSON_FIELD = "content";
     private static String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
     private static String unwantedSuffix = "\"}";
+    private static final String IMPORT_PREFIX = "import org.apache.";
+    private static final int IMPORT_PREFIX_LEN = IMPORT_PREFIX.length();
 
-    static public class BracketStyleMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+    static public class ApacheProjectMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        private int inline;
-        private int nextline;
+        PrefixTree projectTrie = new PrefixTree();
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
@@ -36,42 +37,23 @@ public class BracketStyle extends Configured implements Tool {
             if (script != null) {
 
                 script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
-
                 List<String> lines = StringUtils.splitByLine(script);
 
-                inline = 0;
-                nextline = 0;
-
                 for (String line : lines) {
-                    line = line.replaceAll("\\\\t", "");
-
-                    int index = StringUtils.indexOf(line, '{');
-
-                    if (index >= 0) {
-                        if (index == StringUtils.indexOfAnyBut(line, ' ')) {
-                            nextline++;
+                    if (line.startsWith(IMPORT_PREFIX)) {
+                        line = line.substring(IMPORT_PREFIX_LEN).replaceAll("\\;", "");
+                        String searchResult = projectTrie.search(line.split("\\."));
+                        if (searchResult != null) {
+                            context.write(new Text(searchResult), ONE);
                         }
-                        else {
-                            inline++;
-                        }
-                        inline += StringUtils.countMatches(line, '{') - 1;
                     }
                 }
-                
-                if (inline > nextline) {
-                    context.write(new Text("Inline"), ONE);
-                }
-                else if (inline < nextline) {
-                    context.write(new Text("Next line"), ONE);
-                }
-                else {
-                    context.write(new Text("Unclear"), ONE);
-                }
+
             }     
         }
     }
 
-    static public class BracketStyleReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+    static public class ApacheProjectReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
         private LongWritable total = new LongWritable();
 
         @Override
@@ -91,12 +73,12 @@ public class BracketStyle extends Configured implements Tool {
         String input = args[0];
         Path outputPath = new Path(args[1]);
 
-        Job job = Job.getInstance(super.getConf(), "BracketStyle");
-        job.setJarByClass(BracketStyle.class);
+        Job job = Job.getInstance(super.getConf(), "ApacheProject");
+        job.setJarByClass(ApacheProject.class);
 
-        job.setMapperClass(BracketStyleMapper.class);
-        job.setCombinerClass(BracketStyleReducer.class);
-        job.setReducerClass(BracketStyleReducer.class);
+        job.setMapperClass(ApacheProjectMapper.class);
+        job.setCombinerClass(ApacheProjectReducer.class);
+        job.setReducerClass(ApacheProjectReducer.class);
 
         // use the JSON input format
         job.setInputFormatClass(MultiLineJsonInputFormat.class);
@@ -114,6 +96,6 @@ public class BracketStyle extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        System.exit(ToolRunner.run(conf, new BracketStyle(), args));
+        System.exit(ToolRunner.run(conf, new ApacheProject(), args));
     }
 }

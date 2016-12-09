@@ -18,16 +18,14 @@ import com.alexholmes.json.mapreduce.MultiLineJsonInputFormat;
 import java.util.*;
 import java.io.IOException;
 
-public class BracketStyle extends Configured implements Tool {
+public class EmptyLine extends Configured implements Tool {
 
     private static final String JSON_FIELD = "content";
     private static String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
     private static String unwantedSuffix = "\"}";
 
-    static public class BracketStyleMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+    static public class EmptyLineMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        private int inline;
-        private int nextline;
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
@@ -35,43 +33,49 @@ public class BracketStyle extends Configured implements Tool {
             
             if (script != null) {
 
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
-
                 List<String> lines = StringUtils.splitByLine(script);
-
-                inline = 0;
-                nextline = 0;
+                int totalLines = lines.size();
+                if (totalLines == 0) {
+                    context.write(new Text("Other"), ONE);
+                    return;
+                }
+                int emptyLines = 0;
 
                 for (String line : lines) {
                     line = line.replaceAll("\\\\t", "");
-
-                    int index = StringUtils.indexOf(line, '{');
-
-                    if (index >= 0) {
-                        if (index == StringUtils.indexOfAnyBut(line, ' ')) {
-                            nextline++;
-                        }
-                        else {
-                            inline++;
-                        }
-                        inline += StringUtils.countMatches(line, '{') - 1;
+                    if (StringUtils.indexOfAnyBut(line, ' ') == line.length()) {
+                        emptyLines++;
                     }
                 }
-                
-                if (inline > nextline) {
-                    context.write(new Text("Inline"), ONE);
+
+                double fraction = 100.0 * emptyLines / totalLines;
+                if (fraction < 5.0) {
+                    context.write(new Text("< 5.0 %"), ONE);
                 }
-                else if (inline < nextline) {
-                    context.write(new Text("Next line"), ONE);
+                else if (fraction < 10.0) {
+                    context.write(new Text("< 10.0 %"), ONE);
+                }
+                else if (fraction < 15.0) {
+                    context.write(new Text("< 15.0 %"), ONE);
+                }
+                else if (fraction < 20.0) {
+                    context.write(new Text("< 20.0 %"), ONE);
+                }
+                else if (fraction < 25.0) {
+                    context.write(new Text("< 25.0 %"), ONE);
+                }
+                else if (fraction < 30.0) {
+                    context.write(new Text("< 30.0 %"), ONE);
                 }
                 else {
-                    context.write(new Text("Unclear"), ONE);
+                    context.write(new Text(">= 30.0 %"), ONE);
                 }
+                
             }     
         }
     }
 
-    static public class BracketStyleReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+    static public class EmptyLineReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
         private LongWritable total = new LongWritable();
 
         @Override
@@ -91,12 +95,12 @@ public class BracketStyle extends Configured implements Tool {
         String input = args[0];
         Path outputPath = new Path(args[1]);
 
-        Job job = Job.getInstance(super.getConf(), "BracketStyle");
-        job.setJarByClass(BracketStyle.class);
+        Job job = Job.getInstance(super.getConf(), "EmptyLine");
+        job.setJarByClass(EmptyLine.class);
 
-        job.setMapperClass(BracketStyleMapper.class);
-        job.setCombinerClass(BracketStyleReducer.class);
-        job.setReducerClass(BracketStyleReducer.class);
+        job.setMapperClass(EmptyLineMapper.class);
+        job.setCombinerClass(EmptyLineReducer.class);
+        job.setReducerClass(EmptyLineReducer.class);
 
         // use the JSON input format
         job.setInputFormatClass(MultiLineJsonInputFormat.class);
@@ -114,6 +118,6 @@ public class BracketStyle extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        System.exit(ToolRunner.run(conf, new BracketStyle(), args));
+        System.exit(ToolRunner.run(conf, new EmptyLine(), args));
     }
 }
