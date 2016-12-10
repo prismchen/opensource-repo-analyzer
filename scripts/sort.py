@@ -19,5 +19,5 @@ for key, value in sorted_lst:
     print "%s: %s" % (key, value)
     count += value
 
-print count
+print "Total count: " +  count
 file.close()
