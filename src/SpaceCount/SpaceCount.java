@@ -26,28 +26,28 @@ public class SpaceCount extends Configured implements Tool {
 
     static public class SpaceCountMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        private Map<Integer, Integer> spaceStats;
+        private Map<Integer, Integer> spaceStats; // Store statistics for indentation spaces
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
-            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);
+            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);  // clear JSON format to pure text
             
             if (script != null) {
 
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove coomments
 
-                List<String> lines = StringUtils.splitByLine(script);
+                List<String> lines = StringUtils.splitByLine(script); 
                 int count = 0;
                 spaceStats = new HashMap<>();
 
                 for (String line : lines) {
-                    if (line.startsWith("\\t")) {
+                    if (line.startsWith("\\t")) { // if indended by tab
                         context.write(new Text("tab"), ONE);
                         return;
                     }
 
                     line = line.substring(0, StringUtils.indexOfAnyBut(line, ' '));
-                    count = StringUtils.countMatches(line, ' ');
+                    count = StringUtils.countMatches(line, ' '); // count indenting spaces
 
                     if (count == 0) {
                         continue;
@@ -61,25 +61,25 @@ public class SpaceCount extends Configured implements Tool {
                     }
                 }
 
-                if (spaceStats.size() == 0) {
+                if (spaceStats.size() == 0) { // if no indents found in this file
                     context.write(new Text("no indent"), ONE);
                     return;
                 }
 
                 int totalNum = 0;
-                int leastMajority = Integer.MAX_VALUE;
+                int leastNoticeable = Integer.MAX_VALUE;
 
-                for (int spaceNum : spaceStats.keySet()) {
+                for (int spaceNum : spaceStats.keySet()) { // calculate number of total indented lines
                     totalNum += spaceStats.get(spaceNum);
                 }
 
                 for (int spaceNum : spaceStats.keySet()) {
-                    if (spaceStats.get(spaceNum) > totalNum / 50) {
-                        leastMajority = Math.min(leastMajority, spaceNum);
+                    if (spaceStats.get(spaceNum) > totalNum / 50) { 
+                        leastNoticeable = Math.min(leastNoticeable, spaceNum); // find the least number of spaces that is noticeably used for indenting (> 2% of all indented lines)
                     }
                 }
 
-                context.write(new Text("" + leastMajority), ONE);
+                context.write(new Text("" + leastNoticeable), ONE);
             }     
         }
     }
@@ -110,9 +110,8 @@ public class SpaceCount extends Configured implements Tool {
         job.setMapperClass(SpaceCountMapper.class);
         job.setCombinerClass(SpaceCountReducer.class);
         job.setReducerClass(SpaceCountReducer.class);
-
-        // use the JSON input format
-        job.setInputFormatClass(MultiLineJsonInputFormat.class);
+    
+        job.setInputFormatClass(MultiLineJsonInputFormat.class); // use the JSON input format 
         MultiLineJsonInputFormat.setInputJsonMember(job, JSON_FIELD);
         job.setOutputFormatClass(TextOutputFormat.class);
 

@@ -23,30 +23,34 @@ public class ApacheProject extends Configured implements Tool {
     private static final String JSON_FIELD = "content";
     private static String unwantedPrefix = "{\"" + JSON_FIELD + "\":\"";
     private static String unwantedSuffix = "\"}";
-    private static final String IMPORT_PREFIX = "import org.apache.";
+    private static final String IMPORT_PREFIX = "import org.apache."; // Common import prefix for all Apache projects
     private static final int IMPORT_PREFIX_LEN = IMPORT_PREFIX.length();
 
     static public class ApacheProjectMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         final private static LongWritable ONE = new LongWritable(1);
-        PrefixTree projectTrie = new PrefixTree();
+        PrefixTree projectTrie = new PrefixTree(); // PrefixTree (Trie) for storing all Apache project names
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
-            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);
+            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix); // clear JSON format to pure text
             
             if (script != null) {
-
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove coomments
                 List<String> lines = StringUtils.splitByLine(script);
+                Set<String> results = new HashSet<>();
 
                 for (String line : lines) {
                     if (line.startsWith(IMPORT_PREFIX)) {
-                        line = line.substring(IMPORT_PREFIX_LEN).replaceAll("\\;", "");
-                        String searchResult = projectTrie.search(line.split("\\."));
+                        line = line.substring(IMPORT_PREFIX_LEN).replaceAll("\\;", ""); // remove imports' trailing semicolon 
+                        String searchResult = projectTrie.search(line.split("\\.")); // match import with a valid Apache project name; if not valid return null
                         if (searchResult != null) {
-                            context.write(new Text(searchResult), ONE);
+                            results.add(searchResult);
                         }
                     }
+                }
+
+                for (String result : results) {
+                    context.write(new Text(result), ONE);
                 }
 
             }     
@@ -80,8 +84,7 @@ public class ApacheProject extends Configured implements Tool {
         job.setCombinerClass(ApacheProjectReducer.class);
         job.setReducerClass(ApacheProjectReducer.class);
 
-        // use the JSON input format
-        job.setInputFormatClass(MultiLineJsonInputFormat.class);
+        job.setInputFormatClass(MultiLineJsonInputFormat.class); // use the JSON input format
         MultiLineJsonInputFormat.setInputJsonMember(job, JSON_FIELD);
         job.setOutputFormatClass(TextOutputFormat.class);
 

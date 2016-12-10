@@ -29,7 +29,7 @@ public class EmptyLine extends Configured implements Tool {
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
-            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);
+            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix); // clear JSON format to pure text
             
             if (script != null) {
 
@@ -102,8 +102,7 @@ public class EmptyLine extends Configured implements Tool {
         job.setCombinerClass(EmptyLineReducer.class);
         job.setReducerClass(EmptyLineReducer.class);
 
-        // use the JSON input format
-        job.setInputFormatClass(MultiLineJsonInputFormat.class);
+        job.setInputFormatClass(MultiLineJsonInputFormat.class); // use the JSON input format
         MultiLineJsonInputFormat.setInputJsonMember(job, JSON_FIELD);
         job.setOutputFormatClass(TextOutputFormat.class);
 

@@ -31,11 +31,11 @@ public class BracketStyle extends Configured implements Tool {
 
         @Override
         protected void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
-            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix);
+            String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix); // clear JSON format to pure text
             
             if (script != null) {
 
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/","");
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove coomments
 
                 List<String> lines = StringUtils.splitByLine(script);
 
@@ -43,18 +43,18 @@ public class BracketStyle extends Configured implements Tool {
                 nextline = 0;
 
                 for (String line : lines) {
-                    line = line.replaceAll("\\\\t", "");
+                    line = line.replaceAll("\\\\t", ""); // clear out all possible tabs
 
                     int index = StringUtils.indexOf(line, '{');
 
                     if (index >= 0) {
-                        if (index == StringUtils.indexOfAnyBut(line, ' ')) {
+                        if (index == StringUtils.indexOfAnyBut(line, ' ')) { // if '{' is the first char appearing in present line except for spaces & tabs
                             nextline++;
                         }
                         else {
                             inline++;
                         }
-                        inline += StringUtils.countMatches(line, '{') - 1;
+                        inline += StringUtils.countMatches(line, '{') - 1; // count rest of '{'s as inline
                     }
                 }
                 
@@ -98,8 +98,7 @@ public class BracketStyle extends Configured implements Tool {
         job.setCombinerClass(BracketStyleReducer.class);
         job.setReducerClass(BracketStyleReducer.class);
 
-        // use the JSON input format
-        job.setInputFormatClass(MultiLineJsonInputFormat.class);
+        job.setInputFormatClass(MultiLineJsonInputFormat.class); // use the JSON input format
         MultiLineJsonInputFormat.setInputJsonMember(job, JSON_FIELD);
         job.setOutputFormatClass(TextOutputFormat.class);
 
