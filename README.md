@@ -5,7 +5,7 @@
   GitHub files stored in Google BigQuery table: bigquery-public-data:github_repos.sample_contents, which includes 10% random sampled text contents of top 400k GitHub repositories with more than 2 stars received during Jan-May 2016, roughly 260k java files in total.
 
 ## Indentation Style
-  A mapreduce job analyzes the indentaion style of java codes. The result is presented as numbers of votes to each indentation style (tab, 2 spaces, 4 spaces, etc.) and each unique file contributes to one vote. More specific rule is that a indentation style is either tab or the least number of spaces that is majorly used (exceeds 5% of all indented lines).
+  A mapreduce job analyzes the indentaion style of java codes. The result is presented as numbers of votes to each indentation style (tab, 2 spaces, 4 spaces, etc.) and each unique file contributes to one vote. More specific rule is that a indentation style is either tab or the least number of spaces that is noticeably used for indenting (exceeds 2% of all indented lines).
   
   A brief view of results (descending order):
   
