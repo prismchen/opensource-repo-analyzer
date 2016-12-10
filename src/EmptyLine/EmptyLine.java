@@ -69,9 +69,8 @@ public class EmptyLine extends Configured implements Tool {
                 }
                 else {
                     context.write(new Text(">= 30.0 %"), ONE);
-                }
-                
-            }     
+                }   
+            }
         }
     }
 

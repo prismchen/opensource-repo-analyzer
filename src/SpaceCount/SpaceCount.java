@@ -34,7 +34,7 @@ public class SpaceCount extends Configured implements Tool {
             
             if (script != null) {
 
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove coomments
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove comments
 
                 List<String> lines = StringUtils.splitByLine(script); 
                 int count = 0;

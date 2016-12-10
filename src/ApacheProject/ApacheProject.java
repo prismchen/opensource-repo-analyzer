@@ -35,7 +35,7 @@ public class ApacheProject extends Configured implements Tool {
             String script = StringUtils.clearScript(text.toString(), unwantedPrefix, unwantedSuffix); // clear JSON format to pure text
             
             if (script != null) {
-                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove coomments
+                script = script.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/",""); // Remove comments
                 List<String> lines = StringUtils.splitByLine(script);
                 Set<String> results = new HashSet<>();
 
