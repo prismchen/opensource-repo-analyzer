@@ -16,7 +16,7 @@
 		Others:                 (1%)
 		
 ## Bracket Style
-  A mapreduce job that analyzes the style of curly brackets in Java code. The possible styles are 
+  A mapreduce job that analyzes the style of curly brackets in Java code. There are 2 possible styles
   	
 	Inline bracket, e.g.
 		for (int i = 0; i < n; i++) {
